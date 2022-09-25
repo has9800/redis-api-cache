@@ -1,53 +1,45 @@
-# redis-mongodb
+# Redis API caching
 
-This is a simple demo for MongoDB write-through caching using Redis, served from an Express server.
+This is a simple demo for caching data from an API using Redis and an Express server.
 
-## Basic functionality
-The Express server has two routes, a `get` route which fetches articles, and a `post` route which allows users to post articles. Simple. <br />
+Client side data fetching can become a huge performance bottleneck. Especially for users with high latency and low bandwith connections. Furthermore, most APIs limit the number of requests they can serve an application within a specific time frame, a process known as rate limiting.
 
-Then, Redis checks to see if the requested document is in the cache and if it's not, then the document is fetched from the MongoDB database.
+In this project, I'm using Redis to cache data from an API on the first request, and then fetch data from the cache on every request after it instead of fetching directly from the API again. The project is running on an Express server.
 
-To try this, bring the repository down to your local machine and run the following...
+To run this project, **Make sure you have Redis and Nodejs installed on your computer**
 
-Make sure you have **Redis** installed...
-
-``` bash
-npm install
+Once you install Redis, you can check if it's working correctly by opening your terminal and running...
+```bash
+redis-cli --version
 # or
-yard add
-```
-
-Now, run the following command to check if Redis is installed correctly 
-```bash 
 redis-cli ping
 ```
 
-You should get a response back that prints 
-```bash 
-> PONG
+If Redis is correctly installed, you should get the version back if you ran the first command, and you should see a print out in the terminal that says `> PONG` if you ran the second command.
+
+First bring the repository down into your local machine and run...
+```bash
+mkdir redis-api-cache && cd redis-api-cache
+
+git init && git clone "<COPY-REPO-URL>"
+
+npm init -y
 ```
 
-Then, setup a MongoDB client either via MongoDB Atlas in the cloud, NodeJS drivers, or any other way you choose to connect. <br />
-Find your MongoDB connection URI string and paste it in `/config/keys.js`. <br />
+Then, cd over to the repository and install the necessary dependencies...
 ```bash
- MONGO_URI: "<YOUR-MONGODB-CONNECTION-URI-HERE>"
- ```
- 
- Also, you'll want to paste in your Redis uri as well. The default is `127.0.0.1:6379`. To learn more, run `redis-cli --help` in your terminal.
- ```bash
- REDIS_URI: "<YOUR-REDIS-URI-HERE>"
- ```
- 
- Finally, in your terminal, run the following command to start the Express server 
- ```bash
- node app.js
- ```
- You should get a print that says
- ```bash
- > app is listening on port 3000!
- ```
- 
- Now, all you have to do is go to your browser and open up `localhost:3000` and check if the server is responding back with a message that it's working fine.
- 
- ## Getting & Posting Articles to the database
- 
+npm install
+# or
+yarn add
+```
+
+Finally, in your terminal, run...
+```bash
+node app.js
+```
+
+You should see a print out in the terminal that says `App listening on port 3000`. Then, go to your browser and navigate to `localhost:3000/fish/<FISH-NAME>`. To try an example, paste `localhost:3000/fish/atlantic-cod` in the url bar. You should get back some data.
+
+On the first line, you should see `fromCache:false` on the first request. But if you reload the page, you'll see it changes to `true` ie `fromCache:true` since the data is cached on the first request and fetched from the cache on the second request.
+
+If you check the terminal, you won't see the print out `Request sent to the API` anymore after the first time. The data is being fetched from the cache.
