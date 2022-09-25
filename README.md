@@ -21,7 +21,7 @@ First bring the repository down into your local machine and run...
 ```bash
 mkdir redis-api-cache && cd redis-api-cache
 
-git init && git clone "<COPY-REPO-URL>"
+git init && git clone "<COPY-REPO-URL>" # https://github.com/has9800/redis-api-cache.git
 
 npm init -y
 ```
