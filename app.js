@@ -5,6 +5,7 @@ const axios = require("axios");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// initialize redis client
 let redisClient;
 
 (async () => {
@@ -15,6 +16,7 @@ let redisClient;
   await redisClient.connect();
 })();
 
+// fetch data from the API
 async function fetchApiData(species) {
   const apiResponse = await axios.get(
     `https://www.fishwatch.gov/api/species/${species}`
@@ -23,6 +25,8 @@ async function fetchApiData(species) {
   return apiResponse.data;
 }
 
+// fetch data from cache, if not present, 
+// call next() to fetch from API via getSpeciesData
 async function cacheData(req, res, next) {
   const species = req.params.species;
   let results;
@@ -54,8 +58,8 @@ async function getSpeciesData(req, res) {
       throw "API returned an empty array";
     }
     await redisClient.set(species, JSON.stringify(results), {
-      EX: 180,
-      NX: true,
+      EX: 180, // expiry time - set to 3 mins (180s)
+      NX: true, // set method should only set a key that doesn’t already exist in Redis
     });
 
     res.send({
@@ -73,5 +77,3 @@ app.get("/fish/:species", cacheData, getSpeciesData);
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
-
-// require("./routes/articles")(app);
