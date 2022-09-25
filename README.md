@@ -4,7 +4,7 @@ This is a simple demo for caching data from an API using Redis and an Express se
 
 Client side data fetching can become a huge performance bottleneck. Especially for users with high latency and low bandwith connections. Furthermore, most APIs limit the number of requests they can serve an application within a specific time frame, a process known as rate limiting.
 
-In this project, I'm using Redis to cache data from an API on the first request, and then fetch data from the cache on every request after it instead of fetching directly from the API again. The project is running on an Express server.
+In this project, I'm using Redis to cache data from an API on the first request, and then fetching data from the cache on every subsequent request instead of fetching directly from the API again. The project is running on an Express server.
 
 To run this project, **Make sure you have Redis and Nodejs installed on your computer**
 
