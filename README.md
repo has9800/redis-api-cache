@@ -23,7 +23,7 @@ mkdir redis-api-cache && cd redis-api-cache
 
 git init && git clone "<COPY-REPO-URL>" # https://github.com/has9800/redis-api-cache.git
 
-npm init -y
+cd redis-api-cache
 ```
 
 Then, cd over to the repository and install the necessary dependencies...
